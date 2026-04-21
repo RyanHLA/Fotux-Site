@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npx opennextjs-cloudflare build && cp -r .open-next/assets/_next .open-next/_next && cp .open-next/worker.js .open-next/_worker.js",
+    "build": "npx opennextjs-cloudflare build && mv .open-next/assets/_next .open-next/_next && mv .open-next/assets/BUILD_ID .open-next/BUILD_ID && cp .open-next/worker.js .open-next/_worker.js",
     "build:worker": "next build",
     "start": "next start",
     "lint": "next lint"
