@@ -14,7 +14,7 @@ const nextConfig = {
       {
         // Domínio personalizado R2 (configurar quando tiver em produção)
         protocol: "https",
-        hostname: "fotos.seudominio.com.br",
+        hostname: "fotos.fotux.com.br",
       },
     ],
   },
