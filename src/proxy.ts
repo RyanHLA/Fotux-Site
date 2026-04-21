@@ -29,20 +29,7 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const { pathname } = request.nextUrl;
-  const adminUrl = process.env.NEXT_PUBLIC_ADMIN_URL;
-
-  // If user is logged in and visiting the landing page or auth pages, redirect to admin
-  const authPages = ["/login", "/cadastro", "/recuperar-senha", "/nova-senha"];
-  const isAuthPage = authPages.some((page) => pathname.startsWith(page));
-
-  if (user && (pathname === "/" || isAuthPage) && adminUrl) {
-    return NextResponse.redirect(adminUrl);
-  }
+  await supabase.auth.getUser();
 
   return supabaseResponse;
 }
