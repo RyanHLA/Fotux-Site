@@ -363,59 +363,29 @@ function SignUpForm() {
 export default function CadastroPage() {
   return (
     <div className="min-h-screen bg-background flex">
-      {/* Left panel — decorative */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-foreground overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary/20 via-transparent to-secondary/10" />
-          <div
-            className="absolute inset-0 opacity-5"
-            style={{
-              backgroundImage:
-                "linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px)",
-              backgroundSize: "40px 40px",
-            }}
-          />
-        </div>
-        <div className="relative z-10 flex flex-col justify-between p-12 w-full">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                <rect x="2" y="2" width="6" height="6" rx="1.5" fill="white" fillOpacity="0.9" />
-                <rect x="10" y="2" width="6" height="6" rx="1.5" fill="white" />
-                <rect x="2" y="10" width="6" height="6" rx="1.5" fill="white" />
-                <rect x="10" y="10" width="6" height="6" rx="1.5" fill="white" fillOpacity="0.6" />
-              </svg>
-            </div>
-            <span className="font-heading text-xl font-bold text-white">Fotux</span>
-          </Link>
+      {/* Left panel — photo */}
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
+        <img
+          src="/images/img-login-page.webp"
+          alt="Fotógrafa"
+          className="absolute inset-0 w-full h-full object-cover object-center"
+        />
+        {/* dark overlay */}
+        <div className="absolute inset-0 bg-black/50" />
 
-          <div>
-            <blockquote className="font-heading text-2xl text-white leading-relaxed mb-6">
-              &ldquo;Antes eu perdia horas no WhatsApp. Agora mando o link e em
-              24h tenho a seleção completa.&rdquo;
-            </blockquote>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center text-white font-bold text-sm font-body">
-                AF
-              </div>
-              <div>
-                <p className="font-body font-semibold text-white text-sm">Ana Carolina Ferreira</p>
-                <p className="font-body text-slate-400 text-xs">Fotografa de casamentos, São Paulo</p>
-              </div>
+        <div className="relative z-10 flex flex-col justify-end p-12 w-full">
+          <blockquote className="font-heading text-2xl text-white leading-relaxed mb-6">
+            &ldquo;Antes eu perdia horas no WhatsApp. Agora mando o link e em
+            24h tenho a seleção completa.&rdquo;
+          </blockquote>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center text-white font-bold text-sm font-body flex-shrink-0">
+              AF
             </div>
-          </div>
-
-          <div className="flex gap-6">
-            {["14 dias grátis", "Sem cartão", "Cancele quando quiser"].map((item) => (
-              <div key={item} className="flex items-center gap-1.5">
-                <div className="w-4 h-4 rounded-full bg-primary/30 flex items-center justify-center">
-                  <svg className="w-2.5 h-2.5 text-primary-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-                <span className="font-body text-xs text-slate-400">{item}</span>
-              </div>
-            ))}
+            <div>
+              <p className="font-body font-semibold text-white text-sm">Ana Carolina Ferreira</p>
+              <p className="font-body text-slate-300 text-xs">Fotógrafa de casamentos, São Paulo</p>
+            </div>
           </div>
         </div>
       </div>
