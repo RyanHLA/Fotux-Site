@@ -17,6 +17,11 @@ const planNames: Record<string, string> = {
   avancado: "Avançado",
 };
 
+const inputClass = (hasError: boolean) =>
+  `w-full px-4 py-2.5 rounded-lg border text-sm text-gray-900 placeholder:text-gray-400 bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-[#C65D3B]/20 focus:border-[#C65D3B] ${
+    hasError ? "border-red-300 bg-red-50" : "border-gray-300 hover:border-gray-400"
+  }`;
+
 function SignUpForm() {
   const searchParams = useSearchParams();
   const plano = searchParams.get("plano");
@@ -40,7 +45,6 @@ function SignUpForm() {
       const adminUrl = process.env.NEXT_PUBLIC_ADMIN_URL ?? "";
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 
-      // emailRedirectTo usado apenas quando confirmação de e-mail está HABILITADA
       const emailRedirectTo = plano
         ? `${adminUrl}?checkout_plan=${plano}`
         : adminUrl;
@@ -63,21 +67,16 @@ function SignUpForm() {
         return;
       }
 
-      // Confirmação de e-mail HABILITADA — mostra tela de "verifique seu e-mail"
       if (!signUpData.session) {
         setSuccess(true);
         return;
       }
 
-      // Confirmação DESABILITADA — sessão ativa imediatamente
       const accessToken = signUpData.session.access_token;
 
       if (plano) {
-        // O trigger handle_new_user cria o registro em `photographers` de forma assíncrona.
-        // Aguarda 1.5s para garantir que o registro já existe antes de chamar o checkout.
         await new Promise((resolve) => setTimeout(resolve, 1500));
 
-        // Chama a Edge Function com o token do usuário recém-criado
         const res = await fetch(`${supabaseUrl}/functions/v1/create-checkout`, {
           method: "POST",
           headers: {
@@ -100,13 +99,11 @@ function SignUpForm() {
           return;
         }
 
-        // Falhou ao criar checkout — vai pro painel na aba de settings
         toast.error(`Não foi possível abrir o checkout: ${json?.error ?? "erro desconhecido"}`);
         window.location.href = adminUrl;
         return;
       }
 
-      // Sem plano (período de teste) — vai direto pro painel
       window.location.href = adminUrl;
     } catch {
       toast.error("Ocorreu um erro inesperado. Por favor, tente novamente.");
@@ -121,14 +118,14 @@ function SignUpForm() {
         <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
           <CheckCircle className="w-8 h-8 text-green-600" />
         </div>
-        <h2 className="font-heading text-2xl font-bold text-foreground mb-3">
+        <h2 className="text-xl font-bold text-gray-900 mb-3" style={{ fontFamily: 'Montserrat, sans-serif' }}>
           Verifique seu e-mail!
         </h2>
-        <p className="font-body text-slate-500 leading-relaxed mb-6">
+        <p className="text-gray-500 text-sm leading-relaxed mb-6" style={{ fontFamily: 'Montserrat, sans-serif' }}>
           Enviamos um link de ativação para o seu e-mail. Clique no link para
           ativar sua conta e começar a usar o Fotux.
         </p>
-        <p className="font-body text-sm text-slate-400">
+        <p className="text-xs text-gray-400" style={{ fontFamily: 'Montserrat, sans-serif' }}>
           Não recebeu? Verifique sua caixa de spam.
         </p>
       </div>
@@ -136,18 +133,16 @@ function SignUpForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {/* Plan selected banner */}
       {plano && planNames[plano] && (
-        <div className="bg-primary-50 border border-primary-200 rounded-xl px-4 py-3 flex items-center gap-3">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
-            <CheckCircle className="w-4 h-4 text-white" />
-          </div>
+        <div className="bg-orange-50 border border-orange-200 rounded-lg px-4 py-3 flex items-center gap-3">
+          <CheckCircle className="w-4 h-4 text-[#C65D3B] flex-shrink-0" />
           <div>
-            <p className="font-body text-sm font-semibold text-primary">
+            <p className="text-sm font-semibold text-[#C65D3B]" style={{ fontFamily: 'Montserrat, sans-serif' }}>
               Plano {planNames[plano]} selecionado
             </p>
-            <p className="font-body text-xs text-primary/70">
+            <p className="text-xs text-[#C65D3B]/70" style={{ fontFamily: 'Montserrat, sans-serif' }}>
               Você poderá assinar após criar sua conta.
             </p>
           </div>
@@ -156,26 +151,17 @@ function SignUpForm() {
 
       {/* Name */}
       <div>
-        <label
-          htmlFor="name"
-          className="block font-body text-sm font-medium text-foreground mb-1.5"
-        >
-          Nome completo
-        </label>
         <input
           id="name"
           type="text"
           autoComplete="name"
-          placeholder="Seu nome"
+          placeholder="Nome completo"
           {...register("name")}
-          className={`w-full px-4 py-3 rounded-xl border font-body text-sm text-foreground placeholder:text-slate-400 bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary ${
-            errors.name
-              ? "border-red-300 bg-red-50"
-              : "border-slate-200 hover:border-slate-300"
-          }`}
+          className={inputClass(!!errors.name)}
+          style={{ fontFamily: 'Montserrat, sans-serif' }}
         />
         {errors.name && (
-          <p className="mt-1.5 font-body text-xs text-red-500">
+          <p className="mt-1 text-xs text-red-500" style={{ fontFamily: 'Montserrat, sans-serif' }}>
             {errors.name.message}
           </p>
         )}
@@ -183,26 +169,17 @@ function SignUpForm() {
 
       {/* Email */}
       <div>
-        <label
-          htmlFor="email"
-          className="block font-body text-sm font-medium text-foreground mb-1.5"
-        >
-          E-mail
-        </label>
         <input
           id="email"
           type="email"
           autoComplete="email"
-          placeholder="seu@email.com"
+          placeholder="E-mail"
           {...register("email")}
-          className={`w-full px-4 py-3 rounded-xl border font-body text-sm text-foreground placeholder:text-slate-400 bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary ${
-            errors.email
-              ? "border-red-300 bg-red-50"
-              : "border-slate-200 hover:border-slate-300"
-          }`}
+          className={inputClass(!!errors.email)}
+          style={{ fontFamily: 'Montserrat, sans-serif' }}
         />
         {errors.email && (
-          <p className="mt-1.5 font-body text-xs text-red-500">
+          <p className="mt-1 text-xs text-red-500" style={{ fontFamily: 'Montserrat, sans-serif' }}>
             {errors.email.message}
           </p>
         )}
@@ -210,58 +187,38 @@ function SignUpForm() {
 
       {/* Cellphone + CPF/CNPJ — apenas para planos pagos */}
       {plano && planNames[plano] && (
-        <div className="space-y-4 rounded-xl bg-slate-50 border border-slate-200 p-4">
-          <p className="font-body text-xs text-slate-500 font-medium uppercase tracking-wide">
+        <div className="space-y-3 rounded-lg bg-gray-50 border border-gray-200 p-4">
+          <p className="text-xs text-gray-500 font-medium uppercase tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>
             Dados para faturamento
           </p>
-
           <div>
-            <label
-              htmlFor="cellphone"
-              className="block font-body text-sm font-medium text-foreground mb-1.5"
-            >
-              Celular <span className="text-red-500">*</span>
-            </label>
             <input
               id="cellphone"
               type="tel"
               autoComplete="tel"
-              placeholder="(11) 99999-9999"
+              placeholder="Celular (11) 99999-9999"
               {...register("cellphone")}
-              className={`w-full px-4 py-3 rounded-xl border font-body text-sm text-foreground placeholder:text-slate-400 bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary ${
-                errors.cellphone
-                  ? "border-red-300 bg-red-50"
-                  : "border-slate-200 hover:border-slate-300"
-              }`}
+              className={inputClass(!!errors.cellphone)}
+              style={{ fontFamily: 'Montserrat, sans-serif' }}
             />
             {errors.cellphone && (
-              <p className="mt-1.5 font-body text-xs text-red-500">
+              <p className="mt-1 text-xs text-red-500" style={{ fontFamily: 'Montserrat, sans-serif' }}>
                 {errors.cellphone.message}
               </p>
             )}
           </div>
-
           <div>
-            <label
-              htmlFor="taxId"
-              className="block font-body text-sm font-medium text-foreground mb-1.5"
-            >
-              CPF ou CNPJ <span className="text-red-500">*</span>
-            </label>
             <input
               id="taxId"
               type="text"
               autoComplete="off"
-              placeholder="000.000.000-00"
+              placeholder="CPF ou CNPJ"
               {...register("taxId")}
-              className={`w-full px-4 py-3 rounded-xl border font-body text-sm text-foreground placeholder:text-slate-400 bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary ${
-                errors.taxId
-                  ? "border-red-300 bg-red-50"
-                  : "border-slate-200 hover:border-slate-300"
-              }`}
+              className={inputClass(!!errors.taxId)}
+              style={{ fontFamily: 'Montserrat, sans-serif' }}
             />
             {errors.taxId && (
-              <p className="mt-1.5 font-body text-xs text-red-500">
+              <p className="mt-1 text-xs text-red-500" style={{ fontFamily: 'Montserrat, sans-serif' }}>
                 {errors.taxId.message}
               </p>
             )}
@@ -271,35 +228,26 @@ function SignUpForm() {
 
       {/* Password */}
       <div>
-        <label
-          htmlFor="password"
-          className="block font-body text-sm font-medium text-foreground mb-1.5"
-        >
-          Senha
-        </label>
         <div className="relative">
           <input
             id="password"
             type={showPassword ? "text" : "password"}
             autoComplete="new-password"
-            placeholder="Mínimo 8 caracteres"
+            placeholder="Senha"
             {...register("password")}
-            className={`w-full px-4 py-3 pr-12 rounded-xl border font-body text-sm text-foreground placeholder:text-slate-400 bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary ${
-              errors.password
-                ? "border-red-300 bg-red-50"
-                : "border-slate-200 hover:border-slate-300"
-            }`}
+            className={inputClass(!!errors.password)}
+            style={{ fontFamily: 'Montserrat, sans-serif' }}
           />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors p-1"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
           >
             {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
           </button>
         </div>
         {errors.password && (
-          <p className="mt-1.5 font-body text-xs text-red-500">
+          <p className="mt-1 text-xs text-red-500" style={{ fontFamily: 'Montserrat, sans-serif' }}>
             {errors.password.message}
           </p>
         )}
@@ -307,35 +255,26 @@ function SignUpForm() {
 
       {/* Confirm Password */}
       <div>
-        <label
-          htmlFor="confirmPassword"
-          className="block font-body text-sm font-medium text-foreground mb-1.5"
-        >
-          Confirmar senha
-        </label>
         <div className="relative">
           <input
             id="confirmPassword"
             type={showConfirm ? "text" : "password"}
             autoComplete="new-password"
-            placeholder="Repita a senha"
+            placeholder="Confirmar senha"
             {...register("confirmPassword")}
-            className={`w-full px-4 py-3 pr-12 rounded-xl border font-body text-sm text-foreground placeholder:text-slate-400 bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary ${
-              errors.confirmPassword
-                ? "border-red-300 bg-red-50"
-                : "border-slate-200 hover:border-slate-300"
-            }`}
+            className={inputClass(!!errors.confirmPassword)}
+            style={{ fontFamily: 'Montserrat, sans-serif' }}
           />
           <button
             type="button"
             onClick={() => setShowConfirm(!showConfirm)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors p-1"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
           >
             {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
           </button>
         </div>
         {errors.confirmPassword && (
-          <p className="mt-1.5 font-body text-xs text-red-500">
+          <p className="mt-1 text-xs text-red-500" style={{ fontFamily: 'Montserrat, sans-serif' }}>
             {errors.confirmPassword.message}
           </p>
         )}
@@ -344,20 +283,20 @@ function SignUpForm() {
       <LoadingButton
         loading={loading}
         fullWidth
-        size="lg"
-        className="mt-2"
-        style={{ backgroundColor: '#C65D3B', boxShadow: 'none' }}
+        size="md"
+        className="mt-1 rounded-lg"
+        style={{ backgroundColor: '#C65D3B', boxShadow: 'none', fontFamily: 'Montserrat, sans-serif' }}
       >
         Criar conta
       </LoadingButton>
 
-      <p className="font-body text-xs text-slate-400 text-center leading-relaxed mt-4">
+      <p className="text-xs text-gray-400 text-center leading-relaxed" style={{ fontFamily: 'Montserrat, sans-serif' }}>
         Ao criar uma conta, você concorda com nossos{" "}
-        <a href="#" className="underline hover:text-slate-600">
+        <a href="#" className="underline hover:text-gray-600">
           Termos de uso
         </a>{" "}
         e{" "}
-        <a href="#" className="underline hover:text-slate-600">
+        <a href="#" className="underline hover:text-gray-600">
           Política de privacidade
         </a>
         .
@@ -368,9 +307,9 @@ function SignUpForm() {
 
 export default function CadastroPage() {
   return (
-    <div className="min-h-screen bg-white flex">
-      {/* Left panel — photo only, narrow */}
-      <div className="hidden lg:block lg:w-[38%] xl:w-[42%] relative overflow-hidden flex-shrink-0">
+    <div className="min-h-screen bg-white flex" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+      {/* Left panel — photo narrow/tall */}
+      <div className="hidden lg:block w-[28%] xl:w-[32%] flex-shrink-0 relative">
         <img
           src="/images/img-login-page.webp"
           alt="Fotógrafa"
@@ -379,25 +318,25 @@ export default function CadastroPage() {
       </div>
 
       {/* Right panel — form */}
-      <div className="w-full lg:flex-1 flex items-center justify-center px-8 py-12 lg:px-16">
+      <div className="w-full lg:flex-1 flex items-center justify-center px-10 py-12">
         <div className="w-full max-w-sm">
 
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="font-heading text-2xl font-bold text-gray-900 mb-2">
+          {/* Header — centered */}
+          <div className="text-center mb-8">
+            <h1 className="text-2xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Montserrat, sans-serif' }}>
               Bem-vindo(a) à Fotux
             </h1>
-            <p className="font-body text-gray-500 text-sm">
+            <p className="text-gray-500 text-sm" style={{ fontFamily: 'Montserrat, sans-serif' }}>
               Crie sua conta gratuita sem cartão de crédito.
             </p>
           </div>
 
-          <Suspense fallback={<div className="h-96 animate-pulse bg-slate-100 rounded-xl" />}>
+          <Suspense fallback={<div className="h-80 animate-pulse bg-gray-100 rounded-lg" />}>
             <SignUpForm />
           </Suspense>
 
           {/* Login link */}
-          <p className="mt-5 text-center font-body text-sm text-slate-500">
+          <p className="mt-5 text-center text-sm text-gray-500" style={{ fontFamily: 'Montserrat, sans-serif' }}>
             Já tem conta?{" "}
             <Link
               href="/login"
