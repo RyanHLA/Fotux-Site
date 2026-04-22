@@ -339,7 +339,7 @@ export default function CadastroPage() {
           <p className="mt-5 text-center text-sm text-gray-500" style={{ fontFamily: 'Montserrat, sans-serif' }}>
             Já tem conta?{" "}
             <Link
-              href="/login"
+              href={`${process.env.NEXT_PUBLIC_ADMIN_URL ?? 'https://app.fotux.com.br'}/login`}
               className="font-semibold text-[#C65D3B] hover:opacity-80 transition-opacity"
             >
               Fazer login

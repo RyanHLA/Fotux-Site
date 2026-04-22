@@ -65,9 +65,8 @@ export function Footer() {
             </h4>
             <ul className="space-y-3">
               {[
-                { label: "Entrar", href: "/login" },
+                { label: "Entrar", href: "https://app.fotux.com.br/login" },
                 { label: "Cadastrar", href: "/cadastro" },
-                { label: "Recuperar senha", href: "/recuperar-senha" },
               ].map((item) => (
                 <li key={item.href}>
                   <Link
