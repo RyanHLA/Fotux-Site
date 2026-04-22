@@ -71,7 +71,7 @@ export function Navbar() {
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-3">
             <Link
-              href="https://app.fotux.com.br/auth"
+              href="https://app.fotux.com.br/login"
               className="font-body text-sm font-semibold text-slate-600 hover:text-primary transition-colors px-4 py-2 rounded-xl hover:bg-primary-50"
             >
               Entrar
@@ -113,7 +113,7 @@ export function Navbar() {
             ))}
             <div className="pt-3 flex flex-col gap-2 px-4">
               <Link
-                href="https://app.fotux.com.br/auth"
+                href="https://app.fotux.com.br/login"
                 onClick={() => setIsOpen(false)}
                 className="block text-center py-3 font-body text-sm font-semibold text-slate-600 border border-slate-200 rounded-xl hover:border-primary hover:text-primary transition-colors"
               >
