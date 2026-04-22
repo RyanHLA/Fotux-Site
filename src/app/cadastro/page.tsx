@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import { Eye, EyeOff, ArrowLeft, CheckCircle } from "lucide-react";
+import { Eye, EyeOff, CheckCircle } from "lucide-react";
 import { signUpSchema, type SignUpFormValues } from "@/lib/validations/auth";
 import { createClient } from "@/lib/supabase/client";
 import { LoadingButton } from "@/components/ui/LoadingButton";
@@ -341,11 +341,17 @@ function SignUpForm() {
         )}
       </div>
 
-      <LoadingButton loading={loading} fullWidth size="lg" className="mt-2">
-        Criar minha conta gratuita
+      <LoadingButton
+        loading={loading}
+        fullWidth
+        size="lg"
+        className="mt-2"
+        style={{ backgroundColor: '#C65D3B', boxShadow: 'none' }}
+      >
+        Criar conta
       </LoadingButton>
 
-      <p className="font-body text-xs text-slate-400 text-center leading-relaxed">
+      <p className="font-body text-xs text-slate-400 text-center leading-relaxed mt-4">
         Ao criar uma conta, você concorda com nossos{" "}
         <a href="#" className="underline hover:text-slate-600">
           Termos de uso
@@ -362,53 +368,27 @@ function SignUpForm() {
 
 export default function CadastroPage() {
   return (
-    <div className="min-h-screen bg-background flex">
-      {/* Left panel — photo */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
+    <div className="min-h-screen bg-white flex">
+      {/* Left panel — photo only, narrow */}
+      <div className="hidden lg:block lg:w-[38%] xl:w-[42%] relative overflow-hidden flex-shrink-0">
         <img
           src="/images/img-login-page.webp"
           alt="Fotógrafa"
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
-        {/* dark overlay */}
-        <div className="absolute inset-0 bg-black/50" />
-
-        <div className="relative z-10 flex flex-col justify-end p-12 w-full">
-          <blockquote className="font-heading text-2xl text-white leading-relaxed mb-6">
-            &ldquo;Antes eu perdia horas no WhatsApp. Agora mando o link e em
-            24h tenho a seleção completa.&rdquo;
-          </blockquote>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center text-white font-bold text-sm font-body flex-shrink-0">
-              AF
-            </div>
-            <div>
-              <p className="font-body font-semibold text-white text-sm">Ana Carolina Ferreira</p>
-              <p className="font-body text-slate-300 text-xs">Fotógrafa de casamentos, São Paulo</p>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Right panel — form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12">
-        <div className="w-full max-w-md">
-          {/* Back link */}
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 font-body text-sm text-slate-500 hover:text-foreground transition-colors mb-8"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Voltar ao início
-          </Link>
+      <div className="w-full lg:flex-1 flex items-center justify-center px-8 py-12 lg:px-16">
+        <div className="w-full max-w-sm">
 
           {/* Header */}
           <div className="mb-8">
-            <h1 className="font-heading text-3xl font-bold text-foreground mb-2">
-              Crie sua conta gratuita
+            <h1 className="font-heading text-2xl font-bold text-gray-900 mb-2">
+              Bem-vindo(a) à Fotux
             </h1>
-            <p className="font-body text-slate-500 text-sm">
-              14 dias grátis, sem cartão de crédito.
+            <p className="font-body text-gray-500 text-sm">
+              Crie sua conta gratuita sem cartão de crédito.
             </p>
           </div>
 
@@ -417,11 +397,11 @@ export default function CadastroPage() {
           </Suspense>
 
           {/* Login link */}
-          <p className="mt-6 text-center font-body text-sm text-slate-500">
+          <p className="mt-5 text-center font-body text-sm text-slate-500">
             Já tem conta?{" "}
             <Link
               href="/login"
-              className="font-semibold text-primary hover:text-primary-600 transition-colors"
+              className="font-semibold text-[#C65D3B] hover:opacity-80 transition-opacity"
             >
               Fazer login
             </Link>
